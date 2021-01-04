@@ -80,7 +80,7 @@ func (c *champion) Create() {
 			output += championEntry.DocId + "-" + strconv.Itoa(championEntry.Freq) + " "
 		}
 
-		_, err := c.championFile.WriteString(strings.Trim(output, " ") + "\n")
+		_, err := c.championFile.WriteString(t.Term + strings.Trim(output, " ") + "\n")
 		if err != nil {
 			log.Fatal(err)
 		}
