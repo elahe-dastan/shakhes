@@ -1,13 +1,13 @@
 package index
 
 import (
-	"Information_Retrieval/bsbi"
-	"Information_Retrieval/normalize"
-	"Information_Retrieval/tokenize"
 	"bufio"
 	"io/ioutil"
 	"log"
 	"os"
+	"shakhes/bsbi"
+	"shakhes/normalize"
+	"shakhes/tokenize"
 	"strconv"
 )
 
