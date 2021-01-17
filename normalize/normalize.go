@@ -42,7 +42,7 @@ func split(word string, puncts []string) []string{
 	return []string{word}
 }
 
-func Number(words []string) []string {
+func number(words []string) []string {
 	re, err := regexp.Compile("[۰-۹]+|[0-9]+")
 	if err != nil{
 		log.Fatal(err)
@@ -58,6 +58,17 @@ func Number(words []string) []string {
 	return ans
 }
 
+func singleChar(words []string) []string {
+	ans := make([]string, 0)
+	for _, word := range words {
+		if len([]rune(word)) > 1 {
+			ans = append(ans, word)
+		}
+	}
+
+	return ans
+}
+
 func Normalize(word string) []string {
-	return Number(punctuation(word))
+	return singleChar(number(punctuation(word)))
 }
