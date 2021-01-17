@@ -1,6 +1,8 @@
 package normalize
 
 import (
+	"log"
+	"regexp"
 	"strings"
 )
 
@@ -8,7 +10,7 @@ var punctuations = []string{".", "،", ":", "؟", "!", "«", "»", "؛", "-", "�
 
 // assume that the word can contain only one punctuation
 func punctuation(word string) []string {
-	words := Split(word, punctuations)
+	words := split(word, punctuations)
 	ans := make([]string, 0)
 	for _, term := range words{
 		if term != ""{
@@ -19,7 +21,7 @@ func punctuation(word string) []string {
 	return ans
 }
 
-func Split(word string, puncts []string) []string{
+func split(word string, puncts []string) []string{
 	if len(puncts) == 0 {
 		return nil
 	}
@@ -29,15 +31,33 @@ func Split(word string, puncts []string) []string{
 		terms := strings.Split(word, p)
 		if len(terms) > 1 {
 			for _, term := range terms {
-				words = append(words, Split(term, puncts[i+1:])...)
+				if term != ""{
+					words = append(words, split(term, puncts[i+1:])...)
+				}
 			}
+			return words
 		}
-		return words
 	}
 
 	return []string{word}
 }
 
+func Number(words []string) []string {
+	re, err := regexp.Compile("[۰-۹]+|[0-9]+")
+	if err != nil{
+		log.Fatal(err)
+	}
+
+	ans := make([]string, 0)
+	for _, word := range words {
+		if !re.MatchString(word){
+			ans = append(ans, word)
+		}
+	}
+
+	return ans
+}
+
 func Normalize(word string) []string {
-	return punctuation(word)
+	return Number(punctuation(word))
 }
