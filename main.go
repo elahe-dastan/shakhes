@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	i := index.NewIndex("./docs", 6)
+	i := index.NewIndex("./test", 6)
 	indexFile := i.Construct()
 
 	c := champion_list.NewChampion(indexFile, 1)
