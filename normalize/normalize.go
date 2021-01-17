@@ -4,18 +4,11 @@ import (
 	"strings"
 )
 
-var punctuations = []string{".", "،", ":", "؟", "!", "«", "»", "؛", "-", "…", "[", "]", "(", ")", "/", "=", "٪"}
+var punctuations = []string{".", "،", ":", "؟", "!", "«", "»", "؛", "-", "…", "[", "]", "(", ")", "/", "=", "٪", "\"", "'", "+"}
 
 // assume that the word can contain only one punctuation
 func punctuation(word string) []string {
-	var words []string
-	for _, p := range punctuations {
-		words = strings.Split(word, p)
-		if len(words) > 1 {
-			break
-		}
-	}
-
+	words := Split(word, punctuations)
 	ans := make([]string, 0)
 	for _, term := range words{
 		if term != ""{
@@ -24,6 +17,25 @@ func punctuation(word string) []string {
 	}
 
 	return ans
+}
+
+func Split(word string, puncts []string) []string{
+	if len(puncts) == 0 {
+		return nil
+	}
+
+	var words []string
+	for i, p := range puncts {
+		terms := strings.Split(word, p)
+		if len(terms) > 1 {
+			for _, term := range terms {
+				words = append(words, Split(term, puncts[i+1:])...)
+			}
+		}
+		return words
+	}
+
+	return []string{word}
 }
 
 func Normalize(word string) []string {

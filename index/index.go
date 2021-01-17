@@ -9,6 +9,7 @@ import (
 	"shakhes/normalize"
 	"shakhes/tokenize"
 	"strconv"
+	"strings"
 )
 
 type index struct {
@@ -38,7 +39,12 @@ func (i *index) Construct() string {
 
 // construct index for one document
 func (i *index) construct(docName string) {
-	i.docId++
+	docId, err := strconv.Atoi(strings.TrimSuffix(docName, ".txt"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	i.docId = docId
 
 	docDir := i.collectionDir + "/" + docName
 
