@@ -2,6 +2,7 @@ package index
 
 import (
 	"bufio"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -17,6 +18,8 @@ type index struct {
 	memorySize    int
 	docId         int
 	sortAlgorithm *bsbi.Bsbi
+	dictionary    map[string]bool
+
 }
 
 func NewIndex(collectionDir string, memorySize int) *index {
@@ -33,6 +36,8 @@ func (i *index) Construct() string {
 	for _, d := range docs {
 		i.construct(d.Name())
 	}
+
+	fmt.Println(len(i.dictionary))
 
 	return i.sortAlgorithm.Merge()
 }
@@ -67,6 +72,7 @@ func (i *index) tokenizeSortBlock(f *os.File) {
 		word := scanner.Text()
 		terms := normalize.Normalize(word)
 		for _, term := range terms {
+			i.dictionary[term] = true
 			termPostingList = append(termPostingList, tokenize.TermPostingList{
 				Term:        term,
 				PostingList: []string{strconv.Itoa(i.docId)},
