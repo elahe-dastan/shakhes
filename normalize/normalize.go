@@ -7,13 +7,13 @@ import (
 
 func number(words []string) []string {
 	re, err := regexp.Compile("[۰-۹]+|[0-9]+")
-	if err != nil{
+	if err != nil {
 		log.Fatal(err)
 	}
 
 	ans := make([]string, 0)
 	for _, word := range words {
-		if !re.MatchString(word){
+		if !re.MatchString(word) {
 			ans = append(ans, word)
 		}
 	}
@@ -37,8 +37,8 @@ func zeroWidth(words []string) []string {
 	ans := make([]string, 0)
 	for _, word := range words {
 		normalizedWord := make([]rune, 0)
-		for _, r := range []rune(word){
-			if r != '‌' && r != '​' && r != '­'{
+		for _, r := range []rune(word) {
+			if r != '‌' && r != '​' && r != '­' {
 				normalizedWord = append(normalizedWord, r)
 			}
 		}
@@ -53,8 +53,8 @@ func ha(words []string) []string {
 	for _, word := range words {
 		// ها
 		runes := []rune(word)
-		if string(runes[len(runes)-2:]) == "ها"{
-			if string(runes[:len(runes)-2]) != "تن"{
+		if string(runes[len(runes)-2:]) == "ها" {
+			if string(runes[:len(runes)-2]) != "تن" {
 				word = string(runes[:len(runes)-2])
 			}
 		}
@@ -62,8 +62,6 @@ func ha(words []string) []string {
 			ans = append(ans, word)
 		}
 	}
-//	ends = ['ات', 'ان', 'ترین', 'تر', 'م', 'ت', 'ش', 'یی', 'ی', 'ها', 'ٔ', '‌ا',]
-//ترین
 	return ans
 }
 
@@ -75,10 +73,9 @@ func tarin(words []string) []string {
 		if len(runes) < 4 {
 			continue
 		}
-		if string(runes[len(runes)-4:]) == "ترین"{
-			if string(runes[:len(runes)-4]) != "تن"{
-				word = string(runes[:len(runes)-4])
-			}
+		if string(runes[len(runes)-4:]) == "ترین" {
+			word = string(runes[:len(runes)-4])
+
 		}
 		if word != "" {
 			ans = append(ans, word)
