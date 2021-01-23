@@ -9,6 +9,7 @@ import (
 	"shakhes/bsbi"
 	"shakhes/normalize"
 	"shakhes/tokenize"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -19,11 +20,10 @@ type index struct {
 	docId         int
 	sortAlgorithm *bsbi.Bsbi
 	dictionary    map[string]bool
-
 }
 
 func NewIndex(collectionDir string, memorySize int) *index {
-	return &index{collectionDir: collectionDir, memorySize: memorySize, docId: 0, sortAlgorithm: bsbi.NewBsbi(10, memorySize)}
+	return &index{collectionDir: collectionDir, memorySize: memorySize, docId: 0, sortAlgorithm: bsbi.NewBsbi(10, memorySize), dictionary: make(map[string]bool)}
 }
 
 // dir is document collection directory
@@ -37,7 +37,17 @@ func (i *index) Construct() string {
 		i.construct(d.Name())
 	}
 
-	fmt.Println(len(i.dictionary))
+	keys := make([]string, 0, len(i.dictionary))
+	for k := range i.dictionary {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	j := 1
+	for _, k := range keys {
+		fmt.Printf("%d %s\n",j, k)
+		j++
+	}
 
 	return i.sortAlgorithm.Merge()
 }

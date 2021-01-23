@@ -128,8 +128,11 @@ func (b *Bsbi) middleMerge(blocks []os.FileInfo) {
 	b.block++
 	blockNames := make([]string, len(blocks))
 
-	for i, b := range blocks {
-		blockNames[i] = b.Name()
+	for i, block := range blocks {
+		//if block.Name() == "1132.txt"{
+		//	fmt.Println("bug")
+		//}
+		blockNames[i] = block.Name()
 	}
 
 	filePointers := make([]*bufio.Scanner, len(blockNames))
@@ -215,6 +218,9 @@ func (b *Bsbi) moveFinger() {
 			b.middleMergeWrite()
 		}
 		sort.Sort(b.fingers)
+	}
+	if count > 0 {
+		b.middleMergeWrite()
 	}
 }
 
