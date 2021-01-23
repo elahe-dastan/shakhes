@@ -32,8 +32,23 @@ func singleChar(words []string) []string {
 	return ans
 }
 
+func zeroWidthNonJoiner(words []string) []string {
+	ans := make([]string, 0)
+	for _, word := range words {
+		normalizedWord := make([]rune, 0)
+		for _, r := range []rune(word){
+			if r != '‌'{
+				normalizedWord = append(normalizedWord, r)
+			}
+		}
+		ans = append(ans, string(normalizedWord))
+	}
+
+	return ans
+}
+
 
 
 func Normalize(word string) []string {
-	return singleChar(number(punctuation(word)))
+	return singleChar(number(zeroWidthNonJoiner(punctuation(word))))
 }

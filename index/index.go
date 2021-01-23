@@ -43,10 +43,8 @@ func (i *index) Construct() string {
 	}
 	sort.Strings(keys)
 
-	j := 1
-	for _, k := range keys {
-		fmt.Printf("%d %s\n",j, k)
-		j++
+	for i, k := range keys {
+		fmt.Printf("%d %s\n",i+1, k)
 	}
 
 	return i.sortAlgorithm.Merge()

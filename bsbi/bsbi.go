@@ -20,16 +20,17 @@ type Bsbi struct {
 	fingers        tokenize.Fingers
 	outputBuffer   []tokenize.TermPostingList
 	block          int
+	count          int
 }
 
 func NewBsbi(openFilesNum int, outPutBuffSize int) *Bsbi {
 	blockDir := "./blocks"
-	err := os.Mkdir(blockDir + "0", 0700)
+	err := os.Mkdir(blockDir+"0", 0700)
 	if err != nil && !os.IsExist(err) {
 		log.Fatal(err)
 	}
 
-	return &Bsbi{blockDir: blockDir, openFileNum: openFilesNum, outPutBuffSize: outPutBuffSize, blockNum: 0, mergeRun: 0, outputBuffer: make([]tokenize.TermPostingList, outPutBuffSize), block: 0}
+	return &Bsbi{blockDir: blockDir, openFileNum: openFilesNum, outPutBuffSize: outPutBuffSize, blockNum: 0, mergeRun: 0, outputBuffer: make([]tokenize.TermPostingList, outPutBuffSize), block: 0, count: 0}
 }
 
 func (b *Bsbi) WriteBlock(termDocs []tokenize.TermPostingList) {
@@ -108,7 +109,7 @@ func (b *Bsbi) Merge() string {
 	}
 
 	if len(blocks) == 1 {
-		return b.blockDir + strconv.Itoa(b.mergeRun) + "/" + strconv.Itoa(b.block + 1)+".txt"
+		return b.blockDir + strconv.Itoa(b.mergeRun) + "/" + strconv.Itoa(b.block+1) + ".txt"
 	}
 
 	for {
@@ -117,7 +118,7 @@ func (b *Bsbi) Merge() string {
 			b.mergeRun++
 			b.block = 0
 			return b.Merge()
-		}else {
+		} else {
 			b.middleMerge(blocks[:b.openFileNum])
 			blocks = blocks[b.openFileNum:]
 		}
@@ -129,7 +130,7 @@ func (b *Bsbi) middleMerge(blocks []os.FileInfo) {
 	blockNames := make([]string, len(blocks))
 
 	for i, block := range blocks {
-		//if block.Name() == "1132.txt"{
+		//if block.Name() == "246.txt"{
 		//	fmt.Println("bug")
 		//}
 		blockNames[i] = block.Name()
@@ -166,10 +167,13 @@ func (b *Bsbi) middleMerge(blocks []os.FileInfo) {
 }
 
 func (b *Bsbi) moveFinger() {
-	count := 0
+	b.count = 0
 	// 10 files
 	for {
 		if len(b.fingers) == 0 {
+			if b.count > 0 {
+				b.middleMergeWrite()
+			}
 			break
 		}
 		// how to move pointer forward
@@ -198,40 +202,37 @@ func (b *Bsbi) moveFinger() {
 
 			firstPostingList = append(firstPostingList, b.fingers[i].TermPostingList.PostingList...)
 			sort.Strings(firstPostingList)
-			if b.fingers[i].FileSeek.Scan(){
+			if b.fingers[i].FileSeek.Scan() {
 				termPostingList := tokenize.Unmarshal(b.fingers[i].FileSeek.Text())
 				b.fingers[i].TermPostingList = termPostingList
-			}else {
+			} else {
 				// index ha ro darin b ga midi
 				b.fingers = append(b.fingers[:i], b.fingers[i+1:]...)
 				i--
 			}
 		}
 
-		b.outputBuffer[count] = tokenize.TermPostingList{
+		b.outputBuffer[b.count] = tokenize.TermPostingList{
 			Term:        firstTerm,
 			PostingList: firstPostingList,
 		}
-		count++
-		if count == b.outPutBuffSize {
-			count = 0
+		b.count++
+		if b.count == b.outPutBuffSize {
 			b.middleMergeWrite()
+			b.count = 0
 		}
 		sort.Sort(b.fingers)
-	}
-	if count > 0 {
-		b.middleMergeWrite()
 	}
 }
 
 func (b *Bsbi) middleMergeWrite() {
-	outputDir := b.blockDir + strconv.Itoa(b.mergeRun + 1)
+	outputDir := b.blockDir + strconv.Itoa(b.mergeRun+1)
 	err := os.Mkdir(outputDir, 0700)
 	if err != nil && !os.IsExist(err) {
 		log.Fatal(err)
 	}
 	//output file
-	filePath := outputDir + "/" + strconv.Itoa(b.block)+".txt"
+	filePath := outputDir + "/" + strconv.Itoa(b.block) + ".txt"
 	o, err := os.OpenFile(filePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		log.Fatal(err)
@@ -242,7 +243,7 @@ func (b *Bsbi) middleMergeWrite() {
 		log.Fatal(err)
 	}
 
-	_, err = o.WriteString(tokenize.Marshal(b.outputBuffer))
+	_, err = o.WriteString(tokenize.Marshal(b.outputBuffer[:b.count]))
 	if err != nil {
 		log.Fatal(err)
 	}
