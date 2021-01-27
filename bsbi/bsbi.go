@@ -23,8 +23,8 @@ type Bsbi struct {
 	count          int
 }
 
-func NewBsbi(openFilesNum int, outPutBuffSize int) *Bsbi {
-	blockDir := "./blocks"
+func NewBsbi(openFilesNum int, outPutBuffSize int, indexingDir string) *Bsbi {
+	blockDir := indexingDir + "./blocks"
 	err := os.Mkdir(blockDir+"0", 0700)
 	if err != nil && !os.IsExist(err) {
 		log.Fatal(err)

@@ -23,9 +23,9 @@ type index struct {
 	docToDocId    map[int]string
 }
 
-func NewIndex(collectionDir string, memorySize int) *index {
+func NewIndex(collectionDir string, memorySize int, indexingDir string) *index {
 	return &index{collectionDir: collectionDir, memorySize: memorySize, docId: 0,
-		sortAlgorithm: bsbi.NewBsbi(10, memorySize), dictionary: make(map[string]bool), docToDocId: make(map[int]string)}
+		sortAlgorithm: bsbi.NewBsbi(10, memorySize, indexingDir), dictionary: make(map[string]bool), docToDocId: make(map[int]string)}
 }
 
 // dir is document collection directory
@@ -39,15 +39,17 @@ func (i *index) Construct() string {
 		i.construct(d.Name())
 	}
 
+	fmt.Println(i.docToDocId)
+
 	keys := make([]string, 0, len(i.dictionary))
 	for k := range i.dictionary {
 		keys = append(keys, k)
 	}
 	sort.Strings(keys)
 
-	for i, k := range keys {
-		fmt.Printf("%d %s\n",i+1, k)
-	}
+	//for i, k := range keys {
+	//	fmt.Printf("%d %s\n",i+1, k)
+	//}
 
 	return i.sortAlgorithm.Merge()
 }

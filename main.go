@@ -22,7 +22,7 @@ func main() {
 	}
 
 	for _, c := range clusters {
-		i := index.NewIndex("./cluster-docs/" + c.Name(), 6)
+		i := index.NewIndex("./cluster-docs/" + c.Name(), 6, c.Name())
 		indexFile := i.Construct()
 		fmt.Println(indexFile)
 		break
