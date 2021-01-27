@@ -24,8 +24,13 @@ type Bsbi struct {
 }
 
 func NewBsbi(openFilesNum int, outPutBuffSize int, indexingDir string) *Bsbi {
-	blockDir := indexingDir + "./blocks"
-	err := os.Mkdir(blockDir+"0", 0700)
+	err := os.Mkdir("./" + indexingDir, 0700)
+	if err != nil && !os.IsExist(err) {
+		log.Fatal(err)
+	}
+
+	blockDir := "./" + indexingDir + "/blocks"
+	err = os.Mkdir(blockDir+"0", 0700)
 	if err != nil && !os.IsExist(err) {
 		log.Fatal(err)
 	}
