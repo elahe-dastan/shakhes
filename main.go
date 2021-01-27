@@ -16,11 +16,15 @@ func main() {
 	//c.Create()
 
 	// cluster indexing
-	docs, err := ioutil.ReadDir(i.collectionDir)
+	clusters, err := ioutil.ReadDir("./cluster-docs")
 	if err != nil {
 		log.Fatal(err)
 	}
-	i := index.NewIndex("./docs", 6)
-	indexFile := i.Construct()
-	fmt.Println(indexFile)
+
+	for _, c := range clusters {
+		i := index.NewIndex("./cluster-docs/" + c.Name(), 6)
+		indexFile := i.Construct()
+		fmt.Println(indexFile)
+		break
+	}
 }

@@ -20,10 +20,12 @@ type index struct {
 	docId         int
 	sortAlgorithm *bsbi.Bsbi
 	dictionary    map[string]bool
+	docToDocId    map[int]string
 }
 
 func NewIndex(collectionDir string, memorySize int) *index {
-	return &index{collectionDir: collectionDir, memorySize: memorySize, docId: 0, sortAlgorithm: bsbi.NewBsbi(10, memorySize), dictionary: make(map[string]bool)}
+	return &index{collectionDir: collectionDir, memorySize: memorySize, docId: 0,
+		sortAlgorithm: bsbi.NewBsbi(10, memorySize), dictionary: make(map[string]bool), docToDocId: make(map[int]string)}
 }
 
 // dir is document collection directory
@@ -54,10 +56,12 @@ func (i *index) Construct() string {
 func (i *index) construct(docName string) {
 	docId, err := strconv.Atoi(strings.TrimSuffix(docName, ".txt"))
 	if err != nil {
-		log.Fatal(err)
+		i.docId++
+		i.docToDocId[i.docId] = strings.TrimSuffix(docName, ".txt")
+		//log.Fatal(err)
+	}else {
+		i.docId = docId
 	}
-
-	i.docId = docId
 
 	docDir := i.collectionDir + "/" + docName
 
