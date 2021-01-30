@@ -7,11 +7,12 @@ import (
 	"log"
 	"os"
 	"shakhes/bsbi"
-	"shakhes/normalize"
 	"shakhes/tokenize"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/elahe-dastan/trunk"
 )
 
 type index struct {
