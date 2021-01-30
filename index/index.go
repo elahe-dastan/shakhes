@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/elahe-dastan/trunk"
+	"github.com/elahe-dastan/trunk/normalize"
 )
 
 type index struct {
@@ -62,7 +62,7 @@ func (i *index) construct(docName string) {
 		i.docId++
 		i.docToDocId[i.docId] = strings.TrimSuffix(docName, ".txt")
 		//log.Fatal(err)
-	}else {
+	} else {
 		i.docId = docId
 	}
 
