@@ -1,14 +1,13 @@
 package main
 
 import (
-	champion_list "shakhes/champion-list"
 	"shakhes/index"
 )
 
 func main() {
 	//main indexing
 	i := index.NewIndex("./docs", 6, ".")
-	indexFile := i.Construct()
+	_ = i.Construct()
 
 	// kesafat and just becuase of time
 	//f, err := os.Open(indexFile)
@@ -28,8 +27,8 @@ func main() {
 	//}
 
 
-	c := champion_list.NewChampion(indexFile, 1)
-	c.Create()
+	//c := champion_list.NewChampion(indexFile, 1)
+	//c.Create()
 
 	// cluster indexing
 	//clusters, err := ioutil.ReadDir("./cluster-docs")

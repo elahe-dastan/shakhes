@@ -57,20 +57,20 @@ func (b *Bsbi) WriteBlock(termDocs []tokenize.TermPostingList) {
 	sortedBlockStr := ""
 
 	var previous tokenize.TermPostingList
-	for _, termDoc := range sortedBlock {
-		if termDoc.Term == previous.Term {
-			if termDoc.PostingList[0].DocId != previous.PostingList[0].DocId {
-				previous.PostingList[0].Frequency += termDoc.PostingList[0].Frequency
+	for _, termPostingList := range sortedBlock {
+		if termPostingList.Term == previous.Term {
+			if termPostingList.PostingList[0].DocId != previous.PostingList[0].DocId {
+				previous.PostingList[0].Frequency += termPostingList.PostingList[0].Frequency
 			}
 
 			continue
 		}
 
 		if previous.Term != "" {
+			sortedBlockStr += previous.Marshal()
 			sortedBlockStr += "\n"
 		}
-		sortedBlockStr += termDoc.Term + " " + previous.Marshal()
-		previous = termDoc
+		previous = termPostingList
 	}
 
 	_, err = o.WriteString(sortedBlockStr)
