@@ -2,6 +2,7 @@ package bsbi
 
 import (
 	"bufio"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -24,7 +25,7 @@ type Bsbi struct {
 }
 
 func NewBsbi(openFilesNum int, outPutBuffSize int, indexingDir string) *Bsbi {
-	err := os.Mkdir("./" + indexingDir, 0700)
+	err := os.Mkdir("./"+indexingDir, 0700)
 	if err != nil && !os.IsExist(err) {
 		log.Fatal(err)
 	}
@@ -159,6 +160,12 @@ func (b *Bsbi) middleMerge(blocks []os.FileInfo) {
 		s := filePointers[i]
 		s.Scan()
 		termPostingList := tokenize.Unmarshal(s.Text())
+		if termPostingList.Term == "برند" {
+			fmt.Println("a")
+		}
+		if termPostingList.Term == "پانیذ" {
+			fmt.Println("b")
+		}
 		b.fingers[i] = tokenize.Finger{
 			FileSeek:        s,
 			TermPostingList: termPostingList,
@@ -204,7 +211,19 @@ func (b *Bsbi) moveFinger() {
 				continue
 			}
 
-			firstPostingList = append(firstPostingList, b.fingers[i].TermPostingList.PostingList...)
+			for _, p2 := range b.fingers[i].TermPostingList.PostingList {
+				exists := false
+				for k, p1 := range firstPostingList {
+					if p1.DocId == p2.DocId {
+						exists = true
+						firstPostingList[k].Frequency += p2.Frequency
+					}
+				}
+				if !exists {
+					firstPostingList = append(firstPostingList, p2)
+				}
+			}
+
 			sort.Sort(firstPostingList)
 			if b.fingers[i].FileSeek.Scan() {
 				termPostingList := tokenize.Unmarshal(b.fingers[i].FileSeek.Text())
