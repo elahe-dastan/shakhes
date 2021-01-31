@@ -57,11 +57,10 @@ func (b *Bsbi) WriteBlock(termDocs []tokenize.TermPostingList) {
 	sortedBlockStr := ""
 
 	var previous tokenize.TermPostingList
-	for i := range sortedBlock {
-		termDoc := sortedBlock[i]
+	for _, termDoc := range sortedBlock {
 		if termDoc.Term == previous.Term {
-			if termDoc.PostingList[0] != previous.PostingList[0] {
-				sortedBlockStr += "," + termDoc.PostingList[0]
+			if termDoc.PostingList[0].DocId != previous.PostingList[0].DocId {
+				previous.PostingList[0].Frequency += termDoc.PostingList[0].Frequency
 			}
 
 			continue
@@ -70,7 +69,7 @@ func (b *Bsbi) WriteBlock(termDocs []tokenize.TermPostingList) {
 		if previous.Term != "" {
 			sortedBlockStr += "\n"
 		}
-		sortedBlockStr += termDoc.Term + " " + termDoc.PostingList[0]
+		sortedBlockStr += termDoc.Term + " " + previous.Marshal()
 		previous = termDoc
 	}
 
@@ -206,7 +205,7 @@ func (b *Bsbi) moveFinger() {
 			}
 
 			firstPostingList = append(firstPostingList, b.fingers[i].TermPostingList.PostingList...)
-			sort.Strings(firstPostingList)
+			sort.Sort(firstPostingList)
 			if b.fingers[i].FileSeek.Scan() {
 				termPostingList := tokenize.Unmarshal(b.fingers[i].FileSeek.Text())
 				b.fingers[i].TermPostingList = termPostingList

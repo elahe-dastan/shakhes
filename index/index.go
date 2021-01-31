@@ -90,7 +90,10 @@ func (i *index) tokenizeSortBlock(f *os.File) {
 			i.dictionary[term] = true
 			termPostingList = append(termPostingList, tokenize.TermPostingList{
 				Term:        term,
-				PostingList: []string{strconv.Itoa(i.docId)},
+				PostingList: []tokenize.PostingList{{
+					DocId: i.docId,
+					Frequency: 1,
+				}},
 			})
 
 			memIndex++
