@@ -2,7 +2,6 @@ package tokenize
 
 import (
 	"bufio"
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -83,8 +82,8 @@ func Marshal(termPostingLists []TermPostingList) string {
 //}
 
 func Unmarshal(line string) TermPostingList {
+	//fmt.Println(line)
 	termPostingList := strings.Split(line, " ")
-	fmt.Println(termPostingList)
 	docIdsFrequencies := strings.Split(termPostingList[1], ",")
 	postingLists := make([]PostingList, 0)
 	for _, docIdFrequency := range docIdsFrequencies{
@@ -101,7 +100,6 @@ func Unmarshal(line string) TermPostingList {
 		Term:        termPostingList[0],
 		PostingList: postingLists,
 	}
-
 }
 
 

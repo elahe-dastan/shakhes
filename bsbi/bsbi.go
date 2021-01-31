@@ -41,6 +41,9 @@ func NewBsbi(openFilesNum int, outPutBuffSize int, indexingDir string) *Bsbi {
 
 func (b *Bsbi) WriteBlock(termDocs []tokenize.TermPostingList) {
 	b.blockNum++
+	if b.blockNum == 1027{
+		fmt.Println("parham")
+	}
 
 	sortedBlock := sortBlock(termDocs)
 
@@ -74,6 +77,10 @@ func (b *Bsbi) WriteBlock(termDocs []tokenize.TermPostingList) {
 		previous = termPostingList
 	}
 
+	// kesafat
+	if sortedBlockStr == "" {
+		sortedBlockStr = previous.Marshal()
+	}
 	_, err = o.WriteString(sortedBlockStr)
 	if err != nil {
 		log.Fatal(err)
@@ -158,14 +165,9 @@ func (b *Bsbi) middleMerge(blocks []os.FileInfo) {
 
 	for i := 0; i < len(filePointers); i++ {
 		s := filePointers[i]
-		s.Scan()
+		fmt.Println(blockNames[i])
+		fmt.Println(s.Scan())
 		termPostingList := tokenize.Unmarshal(s.Text())
-		if termPostingList.Term == "برند" {
-			fmt.Println("a")
-		}
-		if termPostingList.Term == "پانیذ" {
-			fmt.Println("b")
-		}
 		b.fingers[i] = tokenize.Finger{
 			FileSeek:        s,
 			TermPostingList: termPostingList,

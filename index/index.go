@@ -106,18 +106,8 @@ func (i *index) tokenizeSortBlock(f *os.File) {
 		}
 	}
 
-	// masmali
-	a := make([]tokenize.TermPostingList, 0)
-	for i := range termPostingList {
-		if termPostingList[i].Term == "" {
-			break
-		}
-
-		a = append(a, termPostingList[i])
-	}
-
 	if len(termPostingList) > 0 {
-		i.sortAlgorithm.WriteBlock(a)
+		i.sortAlgorithm.WriteBlock(termPostingList)
 	}
 
 	if err := scanner.Err(); err != nil {
