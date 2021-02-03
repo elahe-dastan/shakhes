@@ -82,7 +82,6 @@ func Marshal(termPostingLists []TermPostingList) string {
 //}
 
 func Unmarshal(line string) TermPostingList {
-	//fmt.Println(line)
 	termPostingList := strings.Split(line, " ")
 	docIdsFrequencies := strings.Split(termPostingList[1], ",")
 	postingLists := make([]PostingList, 0)

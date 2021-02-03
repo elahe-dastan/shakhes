@@ -2,7 +2,6 @@ package bsbi
 
 import (
 	"bufio"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -41,9 +40,6 @@ func NewBsbi(openFilesNum int, outPutBuffSize int, indexingDir string) *Bsbi {
 
 func (b *Bsbi) WriteBlock(termDocs []tokenize.TermPostingList) {
 	b.blockNum++
-	if b.blockNum == 1027{
-		fmt.Println("parham")
-	}
 
 	sortedBlock := sortBlock(termDocs)
 
@@ -142,9 +138,6 @@ func (b *Bsbi) middleMerge(blocks []os.FileInfo) {
 	blockNames := make([]string, len(blocks))
 
 	for i, block := range blocks {
-		//if block.Name() == "246.txt"{
-		//	fmt.Println("bug")
-		//}
 		blockNames[i] = block.Name()
 	}
 
@@ -165,8 +158,7 @@ func (b *Bsbi) middleMerge(blocks []os.FileInfo) {
 
 	for i := 0; i < len(filePointers); i++ {
 		s := filePointers[i]
-		fmt.Println(blockNames[i])
-		fmt.Println(s.Scan())
+		s.Scan()
 		termPostingList := tokenize.Unmarshal(s.Text())
 		b.fingers[i] = tokenize.Finger{
 			FileSeek:        s,

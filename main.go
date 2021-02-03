@@ -13,7 +13,7 @@ func main() {
 	c := champion_list.NewChampion(indexFile, 2)
 	c.Create()
 
-	// cluster indexing
+	//cluster indexing
 	//clusters, err := ioutil.ReadDir("./cluster-docs")
 	//if err != nil {
 	//	log.Fatal(err)
@@ -23,5 +23,6 @@ func main() {
 	//	i := index.NewIndex("./cluster-docs/" + c.Name(), 6, c.Name())
 	//	indexFile := i.Construct()
 	//	fmt.Println(indexFile)
+	//	break
 	//}
 }
