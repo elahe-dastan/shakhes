@@ -73,10 +73,10 @@ func (c *champion) Create() {
 		output := ""
 		for i := 0; i < m; i++ {
 			championEntry := heap.Pop(h).(heap2.Frequency)
-			output += strconv.Itoa(championEntry.DocId) + ":" + strconv.Itoa(championEntry.Freq) + " "
+			output += strconv.Itoa(championEntry.DocId) + ":" + strconv.Itoa(championEntry.Freq) + ","
 		}
 
-		_, err := c.championFile.WriteString(t.Term + strings.Trim(output, " ") + "\n")
+		_, err := c.championFile.WriteString(t.Term + " " + strings.Trim(output, ",") + "\n")
 		if err != nil {
 			log.Fatal(err)
 		}
