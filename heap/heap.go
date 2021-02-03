@@ -1,7 +1,7 @@
 package heap
 
 type Frequency struct {
-	DocId string
+	DocId int
 	Freq  int
 }
 
