@@ -1,6 +1,8 @@
 package main
 
 import (
+	"io/ioutil"
+	"log"
 	champion_list "shakhes/champion-list"
 	"shakhes/index"
 )
@@ -14,15 +16,13 @@ func main() {
 	c.Create()
 
 	//cluster indexing
-	//clusters, err := ioutil.ReadDir("./cluster-docs")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//
-	//for _, c := range clusters {
-	//	i := index.NewIndex("./cluster-docs/" + c.Name(), 6, c.Name())
-	//	indexFile := i.Construct()
-	//	fmt.Println(indexFile)
-	//	break
-	//}
+	clusters, err := ioutil.ReadDir("./cluster-docs")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, c := range clusters {
+		i := index.NewIndex("./cluster-docs/" + c.Name(), 6, c.Name())
+		i.Construct()
+	}
 }
